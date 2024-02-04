@@ -5,6 +5,12 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScreenSound", "ScreenSound\ScreenSound.csproj", "{A9CCE41C-6657-42BF-AED4-F3F578033037}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScreenSound.API", "ScreenSound.API\ScreenSound.API.csproj", "{60264294-AE3E-4011-938A-A8AA3B07A0AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScreenSound.Domain", "ScreenSound.Domain\ScreenSound.Domain.csproj", "{301CFBC2-974A-4AC9-B3CF-A48B0B7EDA3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScreenSound.Infrastructure", "ScreenSound.Infrastructure\ScreenSound.Infrastructure.csproj", "{52565777-BA8F-4F13-A6EA-9B1F9372CBEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,8 +21,23 @@ Global
 		{A9CCE41C-6657-42BF-AED4-F3F578033037}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9CCE41C-6657-42BF-AED4-F3F578033037}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9CCE41C-6657-42BF-AED4-F3F578033037}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60264294-AE3E-4011-938A-A8AA3B07A0AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60264294-AE3E-4011-938A-A8AA3B07A0AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60264294-AE3E-4011-938A-A8AA3B07A0AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60264294-AE3E-4011-938A-A8AA3B07A0AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{301CFBC2-974A-4AC9-B3CF-A48B0B7EDA3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{301CFBC2-974A-4AC9-B3CF-A48B0B7EDA3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{301CFBC2-974A-4AC9-B3CF-A48B0B7EDA3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{301CFBC2-974A-4AC9-B3CF-A48B0B7EDA3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52565777-BA8F-4F13-A6EA-9B1F9372CBEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52565777-BA8F-4F13-A6EA-9B1F9372CBEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52565777-BA8F-4F13-A6EA-9B1F9372CBEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52565777-BA8F-4F13-A6EA-9B1F9372CBEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {573A91A2-23E2-4EC5-9E0C-DE1223B20B9B}
 	EndGlobalSection
 EndGlobal

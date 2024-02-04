@@ -1,11 +1,11 @@
-﻿using ScreenSound.Modelos;
-using ScreenSound.Persistencias;
+﻿using ScreenSound.Domain.Entities;
+using ScreenSound.Infrastructure.Persistences.Repositories;
 
 namespace ScreenSound.Menus;
 
 public class MenuMostrarMusicas : Menu
 {
-    public override void Execute(IGenericRepository<Artista> artistRepository)
+    public override void Execute(IGenericRepository<Artist> artistRepository)
     {
         base.Execute(artistRepository);
 
@@ -14,12 +14,12 @@ public class MenuMostrarMusicas : Menu
 
         string nomeDoArtista = Console.ReadLine()!;
 
-        var artist = artistRepository.GetBy(a => a.Nome == nomeDoArtista);
+        var artist = artistRepository.GetBy(a => a.Name == nomeDoArtista);
 
         if (artist is not null)
         {
             Console.WriteLine("\nDiscografia:");
-            artist.ExibirDiscografia();
+            artist.DisplayDiscography();
             Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
             Console.ReadKey();
             Console.Clear();

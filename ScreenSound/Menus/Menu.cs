@@ -1,5 +1,5 @@
-﻿using ScreenSound.Modelos;
-using ScreenSound.Persistencias;
+﻿using ScreenSound.Domain.Entities;
+using ScreenSound.Infrastructure.Persistences.Repositories;
 
 namespace ScreenSound.Menus;
 
@@ -15,7 +15,7 @@ public class Menu
         Console.WriteLine(asteriscos + "\n");
     }
 
-    public virtual void Execute(IGenericRepository<Artista> artistRepository)
+    public virtual void Execute(IGenericRepository<Artist> artistRepository)
     {
         Console.Clear();
     }

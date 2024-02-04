@@ -1,6 +1,7 @@
 ﻿using ScreenSound.Menus;
-using ScreenSound.Modelos;
-using ScreenSound.Persistencias;
+using ScreenSound.Domain.Entities;
+using ScreenSound.Infrastructure.Persistences.Contexts;
+using ScreenSound.Infrastructure.Persistences.Repositories;
 
 Dictionary<int, Menu> opcoes = new()
 {
@@ -12,7 +13,7 @@ Dictionary<int, Menu> opcoes = new()
 };
 
 var context = new ScreenSoundContext();
-var artistRepository = new GenericRepository<Artista>(context);
+var artistRepository = new GenericRepository<Artist>(context);
 
 void ExibirLogo()
 {

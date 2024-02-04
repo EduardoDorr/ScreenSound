@@ -1,11 +1,11 @@
-﻿using ScreenSound.Modelos;
-using ScreenSound.Persistencias;
+﻿using ScreenSound.Domain.Entities;
+using ScreenSound.Infrastructure.Persistences.Repositories;
 
 namespace ScreenSound.Menus;
 
 public class MenuMostrarArtistas : Menu
 {
-    public override void Execute(IGenericRepository<Artista> artistRepository)
+    public override void Execute(IGenericRepository<Artist> artistRepository)
     {
         base.Execute(artistRepository);
 

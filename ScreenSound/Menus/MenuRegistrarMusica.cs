@@ -1,11 +1,11 @@
-﻿using ScreenSound.Modelos;
-using ScreenSound.Persistencias;
+﻿using ScreenSound.Domain.Entities;
+using ScreenSound.Infrastructure.Persistences.Repositories;
 
 namespace ScreenSound.Menus;
 
 public class MenuRegistrarMusica : Menu
 {
-    public override void Execute(IGenericRepository<Artista> artistRepository)
+    public override void Execute(IGenericRepository<Artist> artistRepository)
     {
         base.Execute(artistRepository);
 
@@ -14,7 +14,7 @@ public class MenuRegistrarMusica : Menu
         Console.Write("Digite o artista cuja música deseja registrar: ");
         var nomeDoArtista = Console.ReadLine()!;
 
-        var artist = artistRepository.GetBy(a => a.Nome == nomeDoArtista);
+        var artist = artistRepository.GetBy(a => a.Name == nomeDoArtista);
 
         if (artist is not null)
         {
@@ -24,7 +24,7 @@ public class MenuRegistrarMusica : Menu
             Console.Write("Agora digite o título da música: ");
             var anoLancamento = Console.ReadLine()!;
 
-            artist.AdicionarMusica(new Musica(tituloDaMusica) { AnoLancamento = Convert.ToInt32(anoLancamento) });
+            artist.AddMusic(new Music(tituloDaMusica, Convert.ToInt32(anoLancamento)));
 
             artistRepository.Update(artist);
 

@@ -1,11 +1,11 @@
-﻿using ScreenSound.Modelos;
-using ScreenSound.Persistencias;
+﻿using ScreenSound.Domain.Entities;
+using ScreenSound.Infrastructure.Persistences.Repositories;
 
 namespace ScreenSound.Menus;
 
 public class MenuRegistrarArtista : Menu
 {
-    public override void Execute(IGenericRepository<Artista> artistRepository)
+    public override void Execute(IGenericRepository<Artist> artistRepository)
     {
         base.Execute(artistRepository);
 
@@ -17,7 +17,7 @@ public class MenuRegistrarArtista : Menu
         Console.Write("Digite a bio do artista que deseja registrar: ");
         string bioDoArtista = Console.ReadLine()!;
 
-        var artista = new Artista(nomeDoArtista, bioDoArtista);
+        var artista = new Artist(nomeDoArtista, bioDoArtista);
 
         artistRepository.Add(artista);
 
