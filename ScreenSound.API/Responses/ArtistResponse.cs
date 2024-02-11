@@ -4,7 +4,7 @@ using ScreenSound.Domain.Entities;
 
 namespace ScreenSound.API.Responses;
 
-public sealed record ArtistResponse(string Name, string Bio, string ProfilePhoto, IReadOnlyList<MusicResponse> Musics);
+public sealed record ArtistResponse(int Id, string Name, string Bio, string ProfilePhoto, IReadOnlyList<MusicResponse> Musics);
 
 public static class ArtistResponseExtension
 {
@@ -12,7 +12,7 @@ public static class ArtistResponseExtension
     {
         var musicsResponse = artist.Musics.ToModel().ToImmutableList();
 
-        var artistResponse = new ArtistResponse(artist.Name, artist.Bio, artist.ProfilePhoto, musicsResponse);
+        var artistResponse = new ArtistResponse(artist.Id, artist.Name, artist.Bio, artist.ProfilePhoto, musicsResponse);
 
         return artistResponse;
     }

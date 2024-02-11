@@ -1,0 +1,73 @@
+﻿@page "/EditArtist/{artistName}"
+@inject ArtistsService artistsService
+@inject NavigationManager navigationManager
+
+<MudPaper Class="px-8 pt-2 pb-4 mx-12 my-8" Justify="Justify.Center">
+
+    <MudText Class="mt-8" Typo="Typo.h4">Edição de Artista</MudText>
+
+    <MudForm>
+
+        <MudTextField Class="mt-4" T="string" Placeholder="Nome do Artista"
+                      @bind-Value="_name"
+                      Variant="Variant.Outlined"
+                      Required="true"
+                      RequiredError="Campo obrigatório." />
+
+        <MudTextField Class="mt-4" T="string" Placeholder="Biografia do artista"
+                      @bind-Value="_biography"
+                      Variant="Variant.Outlined"
+                      Lines="4"
+                      Required="true"
+                      RequiredError="Campo obrigatório." />
+
+        <div class="d-flex align-center justify-space-between mt-4">
+            <MudButton Variant="Variant.Filled"
+                       @onclick="Back"
+                       Color="Color.Primary"
+                       Class="ml-auto">
+                Voltar
+            </MudButton>
+        </div>
+
+        <div class="d-flex align-center justify-space-between mt-4">
+            <MudButton Variant="Variant.Filled"
+                       @onclick="Delete"
+                       Color="Color.Secondary"
+                       Class="ml-auto">
+                Deletar
+            </MudButton>
+        </div>
+
+    </MudForm>
+</MudPaper>
+
+
+@code {
+    private string? _name;
+    private string? _biography;
+
+    [Parameter]
+    public string? ArtistName { get; set; }
+    public ArtistResponse? Artist { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Artist = await artistsService.GetArtistByNameAsync(ArtistName!);
+
+        _name = Artist!.Name;
+        _biography = Artist!.Bio;
+    }
+
+    private async Task Delete()
+    {
+        var request = new CreateArtistRequest(_name!, _biography!, "");
+        await artistsService.DeleteArtistAsync(Artist!.Id);
+        navigationManager.NavigateTo("/artists");
+    }
+
+    private async Task Back()
+    {
+        navigationManager.NavigateTo("/");
+    }
+}

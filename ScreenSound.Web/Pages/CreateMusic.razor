@@ -1,0 +1,117 @@
+﻿@page "/CreateMusic"
+@inject ArtistsService artistsService
+@inject MusicsService musicsService
+@inject GenresService genresService
+@inject NavigationManager navigationManager
+@inject ISnackbar snackbar
+
+<MudPaper Class="px-8 pt-2 pb-4 mx-12 my-8" Justify="Justify.Center">
+    <MudText Class="mt-8" Typo="Typo.h4">Cadastro de Música</MudText>
+    <MudForm>
+        <MudTextField Class="mt-4" T="string" Placeholder="Nome da música/canção"
+                      @bind-Value="_name"
+                      Variant="Variant.Outlined"
+                      Required="true"
+                      RequiredError="Campo obrigatório." />
+
+        <MudSelect Class="mt-4" T="ArtistResponse" Label="Artistas" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" ValueChanged="ArtistOnValueChanged">
+            @if (_artists is not null)
+            {
+                @foreach (var artist in _artists)
+                {
+                    <MudSelectItem Value="artist" />
+                }
+            }
+        </MudSelect>
+
+        <MudNumericField Class="mt-4" Placeholder="Ano de lançamento"
+                         @bind-Value="_publishYear"
+                         Variant="Variant.Outlined"
+                         Lines="1"
+                         Required="true"
+                         RequiredError="Campo obrigatório." />
+
+        <MudSelect Class="mt-4" T="GenreResponse" Label="Gêneros" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter" ValueChanged="GenreOnValueChanged">
+            @if (_genres is not null)
+            {
+                @foreach (var genre in _genres)
+                {
+                    <MudSelectItem Value="genre" />
+                }
+            }
+
+            @if (GenresSelected is not null)
+            {
+                @foreach (var genre in GenresSelected)
+                {
+                    <MudAlert Severity="Severity.Info">@(genre.Name) adicionado como gênero da música.</MudAlert>
+                }
+            }
+        </MudSelect>
+
+        <div class="d-flex align-center justify-space-between mt-4">
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Class="ml-auto"
+                       @onclick="CreateOnClick">
+                Cadastrar
+            </MudButton>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Info"
+                       Class="ml-3"
+                       @onclick="BackOnClick">
+                Voltar
+            </MudButton>
+        </div>
+    </MudForm>
+</MudPaper>
+
+@code {
+    private string? _name;
+    private int _publishYear;
+
+    private ICollection<ArtistResponse>? _artists { get; set; }
+    private ICollection<GenreResponse>? _genres { get; set; }
+
+    private List<GenreResponse> GenresSelected { get; set; } = new();
+    private ArtistResponse? ArtistFromMusic { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _artists = await artistsService.GetArtistsAsync();
+        _genres = await genresService.GetGenresAsync();
+    }
+
+    private async Task CreateOnClick()
+    {
+        var genresrequest = new List<GenreRequest>();
+
+        if (GenresSelected is not null)
+            foreach (var item in GenresSelected)
+                genresrequest.Add(new GenreRequest(item.Name, item.Description));
+
+        var request = new CreateMusicRequest(_name!, _publishYear, ArtistFromMusic!.Id, genresrequest);
+
+        await musicsService.AddMusicAsync(request);
+
+        snackbar.Add("Música cadastrada com sucesso!", Severity.Success);
+        navigationManager.NavigateTo("/musicsByArtist");
+    }
+
+    private async Task BackOnClick()
+    {
+        navigationManager.NavigateTo("/");
+    }
+
+    private void ArtistOnValueChanged(ArtistResponse artist)
+    {
+        ArtistFromMusic = artist;
+    }
+
+    private void GenreOnValueChanged(GenreResponse genre)
+    {
+        if (genre is not null)
+            if (!GenresSelected.Contains(genre))
+                GenresSelected.Add(genre);
+    }
+}

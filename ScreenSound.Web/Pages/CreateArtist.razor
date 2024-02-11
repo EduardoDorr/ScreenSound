@@ -1,0 +1,91 @@
+﻿@page "/CreateArtist"
+@inject ArtistsService artistsService
+@inject NavigationManager navigationManager
+
+<MudPaper Class="px-8 pt-2 pb-4 mx-12 my-8" Justify="Justify.Center">
+
+    <MudText Class="mt-8" Typo="Typo.h4">Cadastro do Artista</MudText>
+
+    <MudForm>
+
+        <MudTextField Class="mt-4" T="string" Placeholder="Nome do Artista"
+                      @bind-Value="_name"
+                      Variant="Variant.Outlined"
+                      Required="true"
+                      RequiredError="Campo obrigatório." />
+
+        <MudTextField Class="mt-4" T="string" Placeholder="Biografia do artista"
+                      @bind-Value="_biography"
+                      Variant="Variant.Outlined"
+                      Lines="4"
+                      Required="true"
+                      RequiredError="Campo obrigatório." />
+
+        <MudImage Class="mt-4" src="@_fileImage" />
+        <MudFileUpload T="IBrowserFile" Accept=".jpeg" FilesChanged="UploadFile">
+            <ButtonTemplate>
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.PhotoCamera"
+                           for="@context">
+                    Foto de Perfil
+                </MudButton>
+            </ButtonTemplate>
+        </MudFileUpload>
+
+        <div class="d-flex align-center justify-space-between mt-4">
+            <MudButton Variant="Variant.Filled"
+                       @onclick="Create"
+                       Color="Color.Primary"
+                       Class="ml-auto">
+                Cadastrar
+            </MudButton>
+            <MudButton Variant="Variant.Filled"
+                       @onclick="Back"
+                       Color="Color.Primary"
+                       Class="ml-auto">
+                Voltar
+            </MudButton>
+        </div>
+
+    </MudForm>
+</MudPaper>
+
+
+@code {
+    private string? _name;
+    private string? _biography;
+    private string? _profilePhoto;
+    private string? _fileImage;
+
+    private const long MAX_FILE_SIZE_15MB = 1024 * 1024 * 15;
+
+    private async Task Create()
+    {
+        var request = new CreateArtistRequest(_name!, _biography!, _profilePhoto!);
+        await artistsService.AddArtistAsync(request);
+        navigationManager.NavigateTo("/artists");
+    }
+
+    private async Task UploadFile(IBrowserFile file)
+    {
+        var format = "image/jpeg";
+        var resizedImage = await file.RequestImageFileAsync(format, 200, 200);
+
+        using var fileStream = resizedImage.OpenReadStream();
+        using var memoryStream = new MemoryStream();
+        await fileStream.CopyToAsync(memoryStream);
+
+        var imageUpload = Convert.ToBase64String(memoryStream.ToArray());
+
+        _fileImage = $"data:{format};base64,{imageUpload}";
+
+        _profilePhoto = imageUpload;
+    }
+
+    private async Task Back()
+    {
+        navigationManager.NavigateTo("/");
+    }
+}

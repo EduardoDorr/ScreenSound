@@ -1,0 +1,51 @@
+﻿@page "/artists"
+@inject ArtistsService artistsService
+
+<MudStack Class="mt-4 mb-4" Row="true" Justify="Justify.SpaceBetween">
+    <MudText Class="mb-4" Typo="Typo.h4">Artiastas cadastrados</MudText>
+    <MudPagination Count="@_totalPages" SelectedChanged="PageChanged"></MudPagination>
+</MudStack>
+
+@if (_artistsPerPage is not null)
+{
+    <MudGrid>
+        @foreach (var artist in _artistsPerPage)
+        {
+            <MudItem xs="3">
+                <ArtistCard Artist="artist" />
+            </MudItem>
+        }
+    </MudGrid>
+}
+
+
+@code {
+    private int _pageSize = 8;
+    private int _totalItens;
+    private int _totalPages;
+
+    private ICollection<ArtistResponse> _artistsPerPage;
+    private ICollection<ArtistResponse> _artists;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _artists = await artistsService.GetArtistsAsync();
+
+        if (_artists is not null)
+        {
+            _artists = _artists.OrderByDescending(a => a.Id).ToList();
+            _totalItens = _artists.Count;
+            _totalPages = Convert.ToInt32(Math.Ceiling((_totalItens * 1.0) / _pageSize));
+            this.PageChanged(1);
+        }
+    }
+
+    private void PageChanged(int pageNumber)
+    {
+        var index = pageNumber - 1;
+        _artistsPerPage = 
+            _artists!.Skip(_pageSize * index)
+                     .Take(_pageSize)
+                     .ToList();
+    }
+}

@@ -1,0 +1,49 @@
+﻿@page "/MusicsByArtist"
+@inject MusicsService musicsService
+
+<MudStack Class="mt-4 mb-4" Row="true" Justify="Justify.SpaceBetween">
+    <MudText Class="mb-4" Typo="Typo.h4">Músicas cadastradas</MudText>
+    <MudPagination Count="@_totalPages" SelectedChanged="PageChanged"></MudPagination>
+</MudStack>
+@if (_musicsPerPage is not null)
+{
+    <MudGrid>
+        @foreach (var music in _musicsPerPage)
+        {
+            <MudItem xs="3">
+                <MusicCard Music=music />
+            </MudItem>            
+        }
+    </MudGrid>
+}
+
+@code {
+    private int _pageSize = 8;
+    private int _totalitems;
+    private int _totalPages;
+
+    private ICollection<MusicResponse>? _musics;
+    private ICollection<MusicResponse>? _musicsPerPage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _musics = await musicsService.GetMusicsAsync();
+
+        if (_musics is not null)
+        {
+            _musics = _musics.OrderByDescending(m => m.Id).ToList();
+            _totalitems = _musics.Count;
+            _totalPages = Convert.ToInt32(Math.Ceiling(_totalitems * 1.0) / _pageSize);
+            this.PageChanged(1);
+        }
+    }
+
+    private void PageChanged(int pageNumber)
+    {
+        var index = pageNumber - 1;
+        _musicsPerPage =
+            _musics!.Skip(_pageSize * index)
+                    .Take(_pageSize)
+                    .ToList();
+    }
+}

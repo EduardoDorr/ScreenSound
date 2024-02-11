@@ -6,17 +6,16 @@ namespace ScreenSound.Infrastructure.Persistences.Contexts;
 
 public class ScreenSoundContext : DbContext
 {
-    private const string _connectionString = "Data Source=EDUARDO-PC;Initial Catalog=ScreenSound;User ID=sa;Password=Sequor123?;Trust Server Certificate=True;";
-
     public DbSet<Artist> Artists { get; set; }
     public DbSet<Music> Musics { get; set; }
     public DbSet<Genre> Genres { get; set; }
 
+    public ScreenSoundContext(DbContextOptions options) : base(options) { }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder
-            .UseSqlServer(_connectionString)
-            .UseLazyLoadingProxies();
+        if (optionsBuilder.IsConfigured)
+            return;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

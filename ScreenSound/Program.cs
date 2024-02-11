@@ -12,7 +12,11 @@ Dictionary<int, Menu> opcoes = new()
     { -1, new MenuSair() }
 };
 
-var context = new ScreenSoundContext();
+var context = new ScreenSoundContext(opts =>
+{
+    opts.UseSqlServer(connectionString)
+        .UseLazyLoadingProxies();
+});
 var artistRepository = new GenericRepository<Artist>(context);
 
 void ExibirLogo()

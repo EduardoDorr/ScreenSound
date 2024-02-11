@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
 
 using ScreenSound.API.Requests;
 using ScreenSound.API.Responses;
@@ -47,24 +48,27 @@ public static class ArtistsEndpointExtension
         });
 
     private static void PostArtist(this WebApplication app) =>
-        app.MapPost("/artists", (
+        app.MapPost("/artists", async (
+            [FromServices] IHostEnvironment env,
             [FromServices] IGenericRepository<Artist> repository,
-            [FromBody] ArtistRequest artistRequest) =>
+            [FromBody] CreateArtistRequest request) =>
         {
-            var artist = new Artist(artistRequest.Name, artistRequest.Bio);
+            var artist = new Artist(request.Name, request.Bio);
+
+            await UploadProfilePhoto(request, env, artist);
 
             repository.Add(artist);
 
-            return Results.CreatedAtRoute(nameof(GetArtistsByName), new { name = artist.Name }, artistRequest);
+            return Results.Ok(request);
         });
 
     private static void UpdateArtist(this WebApplication app) =>
         app.MapPut("/artists/{id}", (
             [FromServices] IGenericRepository<Artist> repository,
             int id,
-            [FromBody] Artist artist) =>
+            [FromBody] UpdateArtistRequest request) =>
         {
-            artist.Id = id;
+            var artist = new Artist(request.Name, request.Bio) { Id = id };
 
             repository.Update(artist);
 
@@ -80,4 +84,18 @@ public static class ArtistsEndpointExtension
 
             return Results.NoContent();
         });
+
+    private static async Task UploadProfilePhoto(CreateArtistRequest request, IHostEnvironment env, Artist artist)
+    {
+        var name = request.Name.Trim();
+        var profilePhotoFileName = $"{DateTime.Now:yyyyMMddHHmm}.{name}.jpeg";
+
+        var profilePhotoFullPath = Path.Combine(env.ContentRootPath, "wwwroot", "images", "profilePhotos", profilePhotoFileName);
+
+        using var memoryStream = new MemoryStream(Convert.FromBase64String(request.ProfilePhoto!));
+        using var fileStream = new FileStream(profilePhotoFullPath, FileMode.Create);
+        await memoryStream.CopyToAsync(fileStream);
+
+        artist.AddProfilePhoto(profilePhotoFileName);
+    }
 }
